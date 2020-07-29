@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "HBIOUMzRT1gMJ3jiOL5eeOqyCiQgEGiGe9hT9H+lMRmH3JlFSo4+OuhuBqmP6vhqEx8Ydpi9CUKJZZp5ydk7DQ==",
+  "success": true,
+  "projectFilePath": "C:\\Dev\\Mainova\\AksWorkshop\\users\\Users.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\DennisAdrians\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\3.1.6\\microsoft.aspnetcore.jsonpatch.3.1.6.nupkg.sha512",
+    "C:\\Users\\DennisAdrians\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\3.1.6\\microsoft.aspnetcore.mvc.newtonsoftjson.3.1.6.nupkg.sha512",
+    "C:\\Users\\DennisAdrians\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\DennisAdrians\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\DennisAdrians\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
