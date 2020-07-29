@@ -1,0 +1,18 @@
+environment: development
+
+apphost: k8s
+
+label:
+  name: posts
+
+registry:
+  name: denadrcr
+
+container:
+  name: posts
+  version: v1
+  port: 80
+replicas: 3
+
+service:
+  port: 8080
