@@ -6,7 +6,7 @@ label:
   name: comments
 
 registry:
-  name: denadrcr
+  name: dennistestcr
 
 container:
   name: comments

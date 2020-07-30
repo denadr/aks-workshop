@@ -6,7 +6,7 @@ label:
   name: posts
 
 registry:
-  name: denadrcr
+  name: dennistestcr
 
 container:
   name: posts

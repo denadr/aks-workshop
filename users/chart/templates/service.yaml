@@ -11,4 +11,4 @@ spec:
     targetPort: {{ .Values.container.port }}
   selector:
     app: {{ .Values.label.name }}
-  type: LoadBalancer
+  type: ClusterIP
