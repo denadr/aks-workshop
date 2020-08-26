@@ -6,13 +6,13 @@ label:
   name: comments
 
 registry:
-  name: dennistestcr
+  name: mainovaaksdemocr
 
 container:
   name: comments
-  version: v1
+  version: latest
   port: 80
-replicas: 3
+replicas: 1
 
 service:
-  port: 8082
+  port: 80

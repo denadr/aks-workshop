@@ -3,16 +3,16 @@ environment: development
 apphost: k8s
 
 label:
-  name: posts
+  name: users
 
 registry:
-  name: dennistestcr
+  name: mainovaaksdemocr
 
 container:
-  name: posts
-  version: v1
+  name: users
+  version: latest
   port: 80
-replicas: 3
+replicas: 2
 
 service:
-  port: 8080
+  port: 82

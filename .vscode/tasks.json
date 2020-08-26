@@ -1,42 +1,81 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build",
+		{
+            "label": "clean function",
             "command": "dotnet",
+            "args": [
+                "clean",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
             "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/fx"
+            }
+        },
+        {
+            "label": "build function",
+            "command": "dotnet",
             "args": [
                 "build",
-                "${workspaceFolder}/films/films.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "type": "process",
+            "dependsOn": "clean",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/fx"
+            }
         },
         {
-            "label": "publish",
+            "label": "clean function release",
             "command": "dotnet",
+            "args": [
+                "clean",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
             "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/fx"
+            }
+        },
+        {
+            "label": "publish function",
+            "command": "dotnet",
             "args": [
                 "publish",
-                "${workspaceFolder}/films/films.csproj",
+                "--configuration",
+                "Release",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "type": "process",
+            "dependsOn": "clean function release",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/fx"
+            }
         },
         {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/films/films.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
+            "type": "func",
+            "dependsOn": "build function",
+            "options": {
+                "cwd": "${workspaceFolder}/fx/bin/Debug/netcoreapp3.1"
+            },
+            "command": "host start",
+            "isBackground": true,
+            "problemMatcher": "$func-watch"
         }
     ]
 }

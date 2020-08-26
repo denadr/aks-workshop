@@ -6,13 +6,13 @@ label:
   name: posts
 
 registry:
-  name: dennistestcr
+  name: mainovaaksdemocr
 
 container:
   name: posts
-  version: v1
+  version: latest
   port: 80
-replicas: 3
+replicas: 1
 
 service:
-  port: 8081
+  port: 81

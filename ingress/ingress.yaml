@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: comments-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: comments-service
+          servicePort: 80
+        path: /comments(/|$)(.*)
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: posts-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: posts-service
+          servicePort: 81
+        path: /posts(/|$)(.*)
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: users-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: users-service
+          servicePort: 82
+        path: /users(/|$)(.*)

@@ -1,0 +1,162 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        }
+    },
+    "variables": {
+        "virtualNetworks_myVNet_name": "myVNet",
+        "publicIPAddress": "public_ip",
+        "applicationGateways_myAppGateway_name": "myAppGateway",
+        "vnet_prefix": "10.0.0.0/16",
+        "ag_subnet_prefix": "10.0.0.0/24"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "[concat(variables('publicIPAddress'), '0')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4
+            }          
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "name": "[variables('virtualNetworks_myVNet_name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnet_prefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "myAGSubnet",
+                        "properties": {
+                            "addressPrefix": "[variables('ag_subnet_prefix')]",
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2019-11-01",
+            "name": "[variables('applicationGateways_myAppGateway_name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworks_myVNet_name'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddress'), '0'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "Standard_v2",
+                    "tier": "Standard_v2"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworks_myVNet_name'), 'myAGSubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGwPublicFrontendIp",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddress'), '0'))]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "port_80",
+                        "properties": {
+                            "port": 80
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "myBackendPool",
+                        "properties": {
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "myHTTPSetting",
+                        "properties": {
+                            "port": 80,
+                            "protocol": "Http",
+                            "cookieBasedAffinity": "Disabled",
+                            "pickHostNameFromBackendAddress": false,
+                            "requestTimeout": 20
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "myListener",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', variables('applicationGateways_myAppGateway_name'), 'appGwPublicFrontendIp')]"
+                            },
+                            "frontendPort": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts', variables('applicationGateways_myAppGateway_name'), 'port_80')]"
+                            },
+                            "protocol": "Http",
+                            "requireServerNameIndication": false
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "name": "myRoutingRule",
+                        "properties": {
+                            "ruleType": "Basic",
+                            "httpListener": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', variables('applicationGateways_myAppGateway_name'), 'myListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools', variables('applicationGateways_myAppGateway_name'), 'myBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', variables('applicationGateways_myAppGateway_name'), 'myHTTPSetting')]"
+                            }
+                        }
+                    }
+                ],
+                "enableHttp2": false,
+                "autoscaleConfiguration": {
+                    "minCapacity": 0,
+                    "maxCapacity": 10
+                }
+            }
+        }
+    ]
+}
